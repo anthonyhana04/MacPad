@@ -1,41 +1,50 @@
+//
+//  ContentView.swift
+//  MacPad
+//
+
 import SwiftUI
+import AppKit
 
 struct ContentView: View {
-    // Injected once at start-up
+
+    // now driven by the parent App
+    @Binding var text: String
+    @Binding var fileName: String
+
     @EnvironmentObject private var theme: ThemeManager
-    
-    @State private var text     = ""
-    @State private var fileName = "Untitled"
+
+    // inline rename UI
     @State private var isEditingName = false
     @FocusState private var nameFieldFocused: Bool
-    
+
     var body: some View {
         VStack(spacing: 0) {
             toolbar
             Divider()
+
             TextEditor(text: $text)
                 .font(.system(.body, design: .monospaced))
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(minWidth: 600, minHeight: 400)
-        .task {                      // load a blank doc on first launch first launch
-            (text, fileName) = FileService.shared.newFile()
-        }
     }
-    
-    // MARK: - Top toolbar
+
+    // MARK: Toolbar
     private var toolbar: some View {
         HStack {
-            Button { newFile() }  label: { Label("New",  systemImage: "doc") }
-            Button { openFile() } label: { Label("Open", systemImage: "folder") }
+            Button { newFile() }
+            label: { Label("New",  systemImage: "doc") }
 
-            // ➊  **Save As** button (new text)
-            Button { saveAs() }   label: { Label("Save As", systemImage: "square.and.arrow.down") }
+            Button { openFile() }
+            label: { Label("Open", systemImage: "folder") }
+
+            Button { saveAs() }
+            label: { Label("Save As", systemImage: "square.and.arrow.down") }
 
             Spacer()
 
-            // ➋  Click-to-edit file name
             Group {
                 if isEditingName {
                     TextField("", text: $fileName, onCommit: { isEditingName = false })
@@ -46,13 +55,12 @@ struct ContentView: View {
                 } else {
                     Text(fileName)
                         .foregroundStyle(.secondary)
-                        .onTapGesture { isEditingName = true }   // <-- makes it clickable
+                        .onTapGesture { isEditingName = true }
                 }
             }
 
             Button { theme.toggleTheme() } label: {
-                Image(systemName: theme.colorScheme == .dark ? "sun.max.fill"
-                                                             : "moon.fill")
+                Image(systemName: theme.colorScheme == .dark ? "sun.max.fill" : "moon.fill")
                     .imageScale(.large)
             }
             .buttonStyle(.plain)
@@ -62,17 +70,30 @@ struct ContentView: View {
         .background(.background)
     }
 
-    
-    // MARK: - File actions
-    private func newFile()  { (text, fileName) = FileService.shared.newFile()  }
-    private func openFile() { (text, fileName) = FileService.shared.openFile() }
+    // MARK: File actions
+    private func newFile() {
+        let result = FileService.shared.newFile()
+        text      = result.text
+        fileName  = result.name
+    }
+
+    private func openFile() {
+        let result = FileService.shared.openFile()
+        text      = result.text
+        fileName  = result.name
+    }
+
     private func saveAs() {
-        if let url = FileService.shared.saveAs(initialText: text,
-                                               suggestedName: fileName) {
-            fileName = url.lastPathComponent       // update title if user renamed
+        if let url = FileService.shared.saveAsModal(initialText: text,
+                                                   suggestedName: fileName) {
+            fileName = url.lastPathComponent
         }
     }
 }
 
-#Preview { ContentView().environmentObject(ThemeManager()) }
+#Preview {
+    ContentView(text: .constant(""),
+                fileName: .constant("Untitled"))
+    .environmentObject(ThemeManager())
+}
 
