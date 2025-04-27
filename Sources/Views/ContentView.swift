@@ -19,20 +19,23 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(minWidth: 600, minHeight: 400)
-        .task {                      // load a blank doc on first launch
-            (text, fileName) = FileService.shared.blankDocument()
+        .task {                      // load a blank doc on first launch first launch
+            (text, fileName) = FileService.shared.newFile()
         }
     }
     
     // MARK: - Top toolbar
     private var toolbar: some View {
         HStack {
-            Button { newFile()  } label: { Label("New",  systemImage: "doc") }
+            Button { newFile() }  label: { Label("New",  systemImage: "doc") }
             Button { openFile() } label: { Label("Open", systemImage: "folder") }
-            Button { saveAs()   } label: { Label("Save As", systemImage: "square.and.arrow.down") }
+
+            // ➊  **Save As** button (new text)
+            Button { saveAs() }   label: { Label("Save As", systemImage: "square.and.arrow.down") }
 
             Spacer()
 
+            // ➋  Click-to-edit file name
             Group {
                 if isEditingName {
                     TextField("", text: $fileName, onCommit: { isEditingName = false })
@@ -43,12 +46,13 @@ struct ContentView: View {
                 } else {
                     Text(fileName)
                         .foregroundStyle(.secondary)
-                        .onTapGesture { isEditingName = true }
+                        .onTapGesture { isEditingName = true }   // <-- makes it clickable
                 }
             }
 
             Button { theme.toggleTheme() } label: {
-                Image(systemName: theme.colorScheme == .dark ? "sun.max.fill" : "moon.fill")
+                Image(systemName: theme.colorScheme == .dark ? "sun.max.fill"
+                                                             : "moon.fill")
                     .imageScale(.large)
             }
             .buttonStyle(.plain)
@@ -57,6 +61,7 @@ struct ContentView: View {
         .padding()
         .background(.background)
     }
+
     
     // MARK: - File actions
     private func newFile()  { (text, fileName) = FileService.shared.newFile()  }
