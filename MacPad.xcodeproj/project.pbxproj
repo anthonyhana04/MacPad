@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6E2EA0222DBEE37A00A9708A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E2EA0102DBEE37A00A9708A /* Assets.xcassets */; };
+		6E2EA04D2DBEE37A00A9708A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2EA0192DBEE37A00A9708A /* ContentView.swift */; };
+		6E2EA04F2DBEE37A00A9708A /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2EA0152DBEE37A00A9708A /* ThemeManager.swift */; };
+		6E2EA0522DBEE37A00A9708A /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2EA0172DBEE37A00A9708A /* FileService.swift */; };
+		6E2EA0532DBEE37A00A9708A /* MacPadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6E99239E2DBEDE280022C097 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,28 +32,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6E2EA0082DBEE37A00A9708A /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
+		6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MacPad.xcodeproj; sourceTree = "<group>"; };
+		6E2EA0102DBEE37A00A9708A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6E2EA0112DBEE37A00A9708A /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
+		6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPadApp.swift; sourceTree = "<group>"; };
+		6E2EA0152DBEE37A00A9708A /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		6E2EA0172DBEE37A00A9708A /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		6E2EA0192DBEE37A00A9708A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6E99238F2DBEDE260022C097 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E99239D2DBEDE280022C097 /* MacPadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E9923A72DBEDE280022C097 /* MacPadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		6E9923912DBEDE260022C097 /* MacPad */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MacPad;
-			sourceTree = "<group>";
-		};
-		6E9923A02DBEDE280022C097 /* MacPadTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MacPadTests;
-			sourceTree = "<group>";
-		};
-		6E9923AA2DBEDE280022C097 /* MacPadUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MacPadUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		6E99238C2DBEDE260022C097 /* Frameworks */ = {
@@ -72,12 +70,86 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E2EA0092DBEE37A00A9708A /* MacPad */ = {
+			isa = PBXGroup;
+			children = (
+				6E2EA0082DBEE37A00A9708A /* MacPad.entitlements */,
+			);
+			path = MacPad;
+			sourceTree = "<group>";
+		};
+		6E2EA0122DBEE37A00A9708A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6E2EA0102DBEE37A00A9708A /* Assets.xcassets */,
+				6E2EA0112DBEE37A00A9708A /* MacPad.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6E2EA0132DBEE37A00A9708A /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		6E2EA0162DBEE37A00A9708A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */,
+				6E2EA0152DBEE37A00A9708A /* ThemeManager.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		6E2EA0182DBEE37A00A9708A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6E2EA0172DBEE37A00A9708A /* FileService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		6E2EA01A2DBEE37A00A9708A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6E2EA0192DBEE37A00A9708A /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6E2EA01B2DBEE37A00A9708A /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6E2EA0162DBEE37A00A9708A /* App */,
+				6E2EA0182DBEE37A00A9708A /* Services */,
+				6E2EA01A2DBEE37A00A9708A /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		6E2EA01C2DBEE37A00A9708A /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Supporting;
+			sourceTree = "<group>";
+		};
+		6E2EA01D2DBEE37A00A9708A /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6E9923862DBEDE260022C097 = {
 			isa = PBXGroup;
 			children = (
-				6E9923912DBEDE260022C097 /* MacPad */,
-				6E9923A02DBEDE280022C097 /* MacPadTests */,
-				6E9923AA2DBEDE280022C097 /* MacPadUITests */,
+				6E2EA0092DBEE37A00A9708A /* MacPad */,
+				6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */,
+				6E2EA0122DBEE37A00A9708A /* Resources */,
+				6E2EA0132DBEE37A00A9708A /* Scripts */,
+				6E2EA01B2DBEE37A00A9708A /* Sources */,
+				6E2EA01C2DBEE37A00A9708A /* Supporting */,
 				6E9923902DBEDE260022C097 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,9 +179,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				6E9923912DBEDE260022C097 /* MacPad */,
-			);
 			name = MacPad;
 			packageProductDependencies = (
 			);
@@ -130,9 +199,6 @@
 			dependencies = (
 				6E99239F2DBEDE280022C097 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				6E9923A02DBEDE280022C097 /* MacPadTests */,
-			);
 			name = MacPadTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +218,6 @@
 			);
 			dependencies = (
 				6E9923A92DBEDE280022C097 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6E9923AA2DBEDE280022C097 /* MacPadUITests */,
 			);
 			name = MacPadUITests;
 			packageProductDependencies = (
@@ -198,6 +261,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6E9923902DBEDE260022C097 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6E2EA01D2DBEE37A00A9708A /* Products */;
+					ProjectRef = 6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				6E99238E2DBEDE260022C097 /* MacPad */,
@@ -212,6 +281,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E2EA0222DBEE37A00A9708A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +306,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E2EA04D2DBEE37A00A9708A /* ContentView.swift in Sources */,
+				6E2EA04F2DBEE37A00A9708A /* ThemeManager.swift in Sources */,
+				6E2EA0522DBEE37A00A9708A /* FileService.swift in Sources */,
+				6E2EA0532DBEE37A00A9708A /* MacPadApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
