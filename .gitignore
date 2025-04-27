@@ -1,0 +1,78 @@
+###############################################################################
+#  macOS / iOS / tvOS / watchOS – Xcode & Swift projects                      #
+###############################################################################
+
+# Xcode build products & intermediate files
+DerivedData/
+.build/
+Build/
+build/
+**/build/
+
+# Xcode 14+ result bundles (when you run tests)
+*.xcresult
+
+# Xcode cache
+xcuserdata/
+*.xcuserstate
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Packages/
+Package.resolved        # (optionally keep if you want to pin versions)
+checkouts/
+.recent/
+
+# Swift Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/
+Carthage/Build/
+
+# Mint
+Mint/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Archives & distribution
+*.xcarchive
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Core Data generated machines
+*.momo
+*.momd
+*.xcdatamodel
+*.xcdatamodeld
+
+# Temporary files
+*.swp
+*.lock
+*.tmp
+*.temp
+*.orig
+*.backup
+
+# macOS cruft
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Thumbnails
+._*
