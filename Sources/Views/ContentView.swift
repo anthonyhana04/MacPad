@@ -41,7 +41,7 @@ struct ContentView: View {
             label: { Label("Open", systemImage: "folder") }
 
             Button { saveAs() }
-            label: { Label("Save As", systemImage: "square.and.arrow.down") }
+            label: { Label("Save Is", systemImage: "square.and.arrow.down") }
 
             Spacer()
 
