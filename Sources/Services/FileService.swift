@@ -1,4 +1,5 @@
-// FileService.swift
+// Sources/Services/FileService.swift
+
 import AppKit
 import UniformTypeIdentifiers
 
@@ -9,11 +10,14 @@ final class FileService {
 
     /// Create a brand-new file; return nil if the user cancels.
     func newFile(in window: NSWindow) async -> (text: String, name: String)? {
-        if let url = await saveAs(in: window, initialText: "", suggestedName: "Untitled") {
-            return ("", url.lastPathComponent)
-        } else {
+        guard let url = await saveAs(
+            in: window,
+            initialText: "",
+            suggestedName: "Untitled"
+        ) else {
             return nil
         }
+        return ("", url.lastPathComponent)
     }
 
     /// Open an existing document; return nil if the user cancels.
@@ -28,7 +32,6 @@ final class FileService {
                     cont.resume(returning: nil)
                     return
                 }
-
                 if url.pathExtension.lowercased() == "rtf",
                    let attr = try? NSAttributedString(
                        url: url,
@@ -44,7 +47,7 @@ final class FileService {
         }
     }
 
-    /// “Save As” sheet: show a Save panel, and if the user picks a URL, write the text out.
+    /// “Save As” sheet: show a Save panel, write the text out, return URL or nil if canceled.
     func saveAs(
         in window: NSWindow,
         initialText: String,
