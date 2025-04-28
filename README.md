@@ -7,7 +7,6 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Building from Source](#building-from-source)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Features
