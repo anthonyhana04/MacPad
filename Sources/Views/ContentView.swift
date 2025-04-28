@@ -1,6 +1,4 @@
 // ContentView.swift
-// MacPad
-
 import SwiftUI
 import AppKit
 
@@ -21,13 +19,11 @@ struct ContentView: View {
             toolbar
             Divider()
             ZStack(alignment: .topLeading) {
-                // TextEditor with transparent background
                 TextEditor(text: $text)
                     .font(.system(.body, design: .monospaced))
                     .background(Color.clear)
                     .scrollContentBackground(.hidden)
 
-                // Placeholder overlay aligned with typing start
                 if text.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("|> Type here!")
@@ -39,7 +35,6 @@ struct ContentView: View {
                     .allowsHitTesting(false)
                 }
             }
-            // Apply same padding to editor and placeholder so they line up
             .padding(8)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -116,6 +111,4 @@ struct ContentView: View {
     ContentView(text: .constant(""), fileName: .constant("Untitled"))
         .environmentObject(ThemeManager())
 }
-
-// git commit -m "Align placeholder with typing start by moving padding to ZStack"
 
