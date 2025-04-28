@@ -45,10 +45,6 @@ open MacPad.xcodeproj
 # Build & Run in Xcode
 ```
 
-## Contributing
-
-Contributions, issues, and feature requests are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) first.
-
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
