@@ -39,7 +39,7 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 - macOS 13+
 
 ```bash
-git clone https://github.com/YourUserName/MacPad.git
+git clone https://github.com/anthonyhana04/MacPad.git
 cd MacPad
 open MacPad.xcodeproj
 # Build & Run in Xcode
