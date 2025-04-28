@@ -1,16 +1,18 @@
+// MacPadApp.swift
 import SwiftUI
 import AppKit
 
 @main
 struct MacPadApp: App {
+    @StateObject private var theme = ThemeManager()
     @State private var text: String = ""
     @State private var fileName: String = "Untitled"
-    @StateObject private var theme = ThemeManager()   // ← use StateObject here
 
     var body: some Scene {
         WindowGroup {
             ContentView(text: $text, fileName: $fileName)
-                .environmentObject(theme)  // inject it into the environment
+                .environmentObject(theme)
+                .preferredColorScheme(theme.colorScheme)
         }
         .commands {
             CommandMenu("File") {
@@ -30,7 +32,7 @@ struct MacPadApp: App {
             guard let (newText, newName) = await FileService.shared.newFile(in: win) else {
                 return
             }
-            text     = newText
+            text = newText
             fileName = newName
         }
     }
@@ -41,7 +43,7 @@ struct MacPadApp: App {
             guard let (openedText, openedName) = await FileService.shared.openFile(in: win) else {
                 return
             }
-            text     = openedText
+            text = openedText
             fileName = openedName
         }
     }
