@@ -1,4 +1,5 @@
-// Sources/ContentView.swift (Swift package target)
+// ContentView.swift
+// MacPad
 
 import SwiftUI
 import AppKit
@@ -11,14 +12,36 @@ struct ContentView: View {
     @State private var isEditingName = false
     @FocusState private var nameFieldFocused: Bool
 
+    private var version: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             toolbar
             Divider()
-            TextEditor(text: $text)
-                .font(.system(.body, design: .monospaced))
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ZStack(alignment: .topLeading) {
+                // TextEditor with transparent background
+                TextEditor(text: $text)
+                    .font(.system(.body, design: .monospaced))
+                    .background(Color.clear)
+                    .scrollContentBackground(.hidden)
+
+                // Placeholder overlay aligned with typing start
+                if text.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("|> Type here!")
+                        Text("|> MacPad Ver. \(version)")
+                        Text("|> Thanks for using MacPad Feedback is Appreciated!")
+                    }
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundColor(.secondary)
+                    .allowsHitTesting(false)
+                }
+            }
+            // Apply same padding to editor and placeholder so they line up
+            .padding(8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(minWidth: 600, minHeight: 400)
     }
@@ -57,20 +80,20 @@ struct ContentView: View {
         guard let win = NSApp.keyWindow else { return }
         Task {
             guard let (newText, newName) = await FileService.shared.newFile(in: win) else {
-                return  // user cancelled
+                return
             }
-            text     = newText
+            text = newText
             fileName = newName
         }
     }
-    
+
     private func openFile() {
         guard let win = NSApp.keyWindow else { return }
         Task {
             guard let (openedText, openedName) = await FileService.shared.openFile(in: win) else {
-                return  // user cancelled
+                return
             }
-            text     = openedText
+            text = openedText
             fileName = openedName
         }
     }
@@ -93,4 +116,6 @@ struct ContentView: View {
     ContentView(text: .constant(""), fileName: .constant("Untitled"))
         .environmentObject(ThemeManager())
 }
+
+// git commit -m "Align placeholder with typing start by moving padding to ZStack"
 

@@ -259,7 +259,6 @@
 			mainGroup = 6E9923862DBEDE260022C097;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				6ECE45872DBF04D30094CC25 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6E9923902DBEDE260022C097 /* Products */;
@@ -618,17 +617,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		6ECE45872DBF04D30094CC25 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 6E9923872DBEDE260022C097 /* Project object */;
 }
