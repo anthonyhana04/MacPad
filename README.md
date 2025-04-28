@@ -18,7 +18,7 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 
 ## Installation
 
-1. Download the [latest release](https://github.com/YourUserName/MacPad/releases).
+1. Download the [latest release](https://github.com/anthonyhana04/MacPad/releases).
 2. Unzip the downloaded file.
 3. Drag **MacPad.app** into your **Applications** folder (or any location you prefer).
 4. Launch from Spotlight or Finder.
