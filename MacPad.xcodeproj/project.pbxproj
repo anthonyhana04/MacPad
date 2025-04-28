@@ -87,13 +87,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		6E2EA0132DBEE37A00A9708A /* Scripts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Scripts;
-			sourceTree = "<group>";
-		};
 		6E2EA0162DBEE37A00A9708A /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -147,7 +140,6 @@
 				6E2EA0092DBEE37A00A9708A /* MacPad */,
 				6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */,
 				6E2EA0122DBEE37A00A9708A /* Resources */,
-				6E2EA0132DBEE37A00A9708A /* Scripts */,
 				6E2EA01B2DBEE37A00A9708A /* Sources */,
 				6E2EA01C2DBEE37A00A9708A /* Supporting */,
 				6E9923902DBEDE260022C097 /* Products */,
