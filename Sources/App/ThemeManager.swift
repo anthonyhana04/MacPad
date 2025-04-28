@@ -6,11 +6,10 @@ import AppKit
 final class ThemeManager: ObservableObject {
     @Published var colorScheme: ColorScheme {
         didSet {
-            // Apply the chosen appearance
             NSApp.appearance = NSAppearance(
                 named: colorScheme == .dark ? .darkAqua : .aqua
             )
-            // Persist the current theme
+            
             UserDefaults.standard.set(
                 colorScheme == .dark,
                 forKey: "isDarkMode"
@@ -29,7 +28,6 @@ final class ThemeManager: ObservableObject {
     }
 
     func toggleTheme() {
-        // Swap light ↔ dark
         colorScheme = (colorScheme == .dark ? .light : .dark)
     }
 }
