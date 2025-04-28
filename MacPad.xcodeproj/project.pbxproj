@@ -35,7 +35,6 @@
 		6E2EA0082DBEE37A00A9708A /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
 		6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MacPad.xcodeproj; sourceTree = "<group>"; };
 		6E2EA0102DBEE37A00A9708A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		6E2EA0112DBEE37A00A9708A /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
 		6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPadApp.swift; sourceTree = "<group>"; };
 		6E2EA0152DBEE37A00A9708A /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		6E2EA0172DBEE37A00A9708A /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
@@ -82,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				6E2EA0102DBEE37A00A9708A /* Assets.xcassets */,
-				6E2EA0112DBEE37A00A9708A /* MacPad.entitlements */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
