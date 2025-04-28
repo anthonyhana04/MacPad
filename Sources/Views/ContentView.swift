@@ -1,20 +1,13 @@
-//
-//  ContentView.swift
-//  MacPad
-//
+// Sources/ContentView.swift (Swift package target)
 
 import SwiftUI
 import AppKit
 
 struct ContentView: View {
-
-    // now driven by the parent App
     @Binding var text: String
     @Binding var fileName: String
-
     @EnvironmentObject private var theme: ThemeManager
 
-    // inline rename UI
     @State private var isEditingName = false
     @FocusState private var nameFieldFocused: Bool
 
@@ -22,7 +15,6 @@ struct ContentView: View {
         VStack(spacing: 0) {
             toolbar
             Divider()
-
             TextEditor(text: $text)
                 .font(.system(.body, design: .monospaced))
                 .padding()
@@ -31,20 +23,12 @@ struct ContentView: View {
         .frame(minWidth: 600, minHeight: 400)
     }
 
-    // MARK: Toolbar
     private var toolbar: some View {
         HStack {
-            Button { newFile() }
-            label: { Label("New",  systemImage: "doc") }
-
-            Button { openFile() }
-            label: { Label("Open", systemImage: "folder") }
-
-            Button { saveAs() }
-            label: { Label("Save Is", systemImage: "square.and.arrow.down") }
-
+            Button { newFile() } label: { Label("New", systemImage: "doc") }
+            Button { openFile() } label: { Label("Open", systemImage: "folder") }
+            Button { saveAs() } label: { Label("Save As", systemImage: "square.and.arrow.down") }
             Spacer()
-
             Group {
                 if isEditingName {
                     TextField("", text: $fileName, onCommit: { isEditingName = false })
@@ -58,7 +42,6 @@ struct ContentView: View {
                         .onTapGesture { isEditingName = true }
                 }
             }
-
             Button { theme.toggleTheme() } label: {
                 Image(systemName: theme.colorScheme == .dark ? "sun.max.fill" : "moon.fill")
                     .imageScale(.large)
@@ -70,30 +53,44 @@ struct ContentView: View {
         .background(.background)
     }
 
-    // MARK: File actions
     private func newFile() {
-        let result = FileService.shared.newFile()
-        text      = result.text
-        fileName  = result.name
+        guard let win = NSApp.keyWindow else { return }
+        Task {
+            guard let (newText, newName) = await FileService.shared.newFile(in: win) else {
+                return  // user cancelled
+            }
+            text     = newText
+            fileName = newName
+        }
     }
-
+    
     private func openFile() {
-        let result = FileService.shared.openFile()
-        text      = result.text
-        fileName  = result.name
+        guard let win = NSApp.keyWindow else { return }
+        Task {
+            guard let (openedText, openedName) = await FileService.shared.openFile(in: win) else {
+                return  // user cancelled
+            }
+            text     = openedText
+            fileName = openedName
+        }
     }
 
     private func saveAs() {
-        if let url = FileService.shared.saveAsModal(initialText: text,
-                                                   suggestedName: fileName) {
-            fileName = url.lastPathComponent
+        guard let win = NSApp.keyWindow else { return }
+        Task {
+            if let url = await FileService.shared.saveAs(
+                in: win,
+                initialText: text,
+                suggestedName: fileName
+            ) {
+                fileName = url.lastPathComponent
+            }
         }
     }
 }
 
 #Preview {
-    ContentView(text: .constant(""),
-                fileName: .constant("Untitled"))
-    .environmentObject(ThemeManager())
+    ContentView(text: .constant(""), fileName: .constant("Untitled"))
+        .environmentObject(ThemeManager())
 }
 
