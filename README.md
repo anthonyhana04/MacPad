@@ -51,4 +51,4 @@ Contributions, issues, and feature requests are welcome! Please read our [Contri
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE.md) for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
