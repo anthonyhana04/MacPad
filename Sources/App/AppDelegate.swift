@@ -1,27 +1,25 @@
 // Sources/App/AppDelegate.swift
-
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+
     var shouldPromptIfDirty: (() -> Bool)?
     var performSave: (() -> Void)?
-    private var skipNextTerminationPrompt = false
-
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApp.windows.forEach { $0.delegate = self }
-    }
-
+    var skipNextTerminationPrompt = false
+    
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if skipNextTerminationPrompt {
+            skipNextTerminationPrompt = false
             return .terminateNow
         }
         guard shouldPromptIfDirty?() == true else {
             return .terminateNow
         }
+
         switch runSaveAlert() {
         case .saveAs:
             performSave?()
-            return .terminateNow
+            return .terminateCancel
         case .dontSave:
             return .terminateNow
         case .cancel:
@@ -33,9 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         guard shouldPromptIfDirty?() == true else {
             return true
         }
+
         switch runSaveAlert() {
         case .saveAs:
-            skipNextTerminationPrompt = true
             performSave?()
             return false
         case .dontSave:
@@ -52,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func runSaveAlert() -> AlertResult {
         let alert = NSAlert()
         alert.messageText = "You have unsaved changes."
-        alert.informativeText = "Do you want to save your document before closing?"
+        alert.informativeText = "Save before closing?"
         alert.alertStyle = .warning
         alert.addButton(withTitle: "Save As")
         alert.addButton(withTitle: "Don't Save")
@@ -61,7 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         switch alert.runModal() {
         case .alertFirstButtonReturn: return .saveAs
         case .alertSecondButtonReturn: return .dontSave
-        default:                   return .cancel
+        default: return .cancel
         }
     }
 }
