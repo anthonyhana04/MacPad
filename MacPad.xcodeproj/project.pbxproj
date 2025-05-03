@@ -14,6 +14,8 @@
 		6E2EA0532DBEE37A00A9708A /* MacPadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */; };
 		6E5911972DBF866500BC5DA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5911962DBF865200BC5DA7 /* AppDelegate.swift */; };
 		6E59119C2DBF89B800BC5DA7 /* WindowAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E59119B2DBF89A900BC5DA7 /* WindowAccessor.swift */; };
+		6E59119F2DC5B52C00BC5DA7 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E59119E2DC5B52900BC5DA7 /* Document.swift */; };
+		6E5911A12DC5B61D00BC5DA7 /* DocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5911A02DC5B61800BC5DA7 /* DocumentStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,8 @@
 		6E2EA0192DBEE37A00A9708A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6E5911962DBF865200BC5DA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E59119B2DBF89A900BC5DA7 /* WindowAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessor.swift; sourceTree = "<group>"; };
+		6E59119E2DC5B52900BC5DA7 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		6E5911A02DC5B61800BC5DA7 /* DocumentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentStore.swift; sourceTree = "<group>"; };
 		6E99238F2DBEDE260022C097 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E99239D2DBEDE280022C097 /* MacPadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E9923A72DBEDE280022C097 /* MacPadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +96,8 @@
 		6E2EA0162DBEE37A00A9708A /* App */ = {
 			isa = PBXGroup;
 			children = (
+				6E5911A02DC5B61800BC5DA7 /* DocumentStore.swift */,
+				6E59119E2DC5B52900BC5DA7 /* Document.swift */,
 				6E59119B2DBF89A900BC5DA7 /* WindowAccessor.swift */,
 				6E5911962DBF865200BC5DA7 /* AppDelegate.swift */,
 				6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */,
@@ -298,9 +304,11 @@
 			files = (
 				6E59119C2DBF89B800BC5DA7 /* WindowAccessor.swift in Sources */,
 				6E2EA04D2DBEE37A00A9708A /* ContentView.swift in Sources */,
+				6E5911A12DC5B61D00BC5DA7 /* DocumentStore.swift in Sources */,
 				6E2EA04F2DBEE37A00A9708A /* ThemeManager.swift in Sources */,
 				6E2EA0522DBEE37A00A9708A /* FileService.swift in Sources */,
 				6E5911972DBF866500BC5DA7 /* AppDelegate.swift in Sources */,
+				6E59119F2DC5B52C00BC5DA7 /* Document.swift in Sources */,
 				6E2EA0532DBEE37A00A9708A /* MacPadApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
