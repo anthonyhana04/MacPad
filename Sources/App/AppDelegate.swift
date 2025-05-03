@@ -3,21 +3,14 @@
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
-    /// Called by MacPadApp to check for unsaved edits
     var shouldPromptIfDirty: (() -> Bool)?
-
-    /// Called by MacPadApp to perform a save-as & then terminate
     var performSave: (() -> Void)?
-
-    /// Skip next prompt when quitting after a save-as
     private var skipNextTerminationPrompt = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Become each window’s delegate so we intercept the red “X”
         NSApp.windows.forEach { $0.delegate = self }
     }
 
-    // MARK: – Quit (Cmd-Q)
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if skipNextTerminationPrompt {
             return .terminateNow
@@ -36,7 +29,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
     }
 
-    // MARK: – Red “X” / window-close
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         guard shouldPromptIfDirty?() == true else {
             return true
