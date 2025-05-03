@@ -15,23 +15,37 @@ final class DocuemntStore: ObservableObject {
     
     @discardableResult
     func open(url: URL, contents: String) -> Document.ID {
-        if let existing = docs.first(where: {$0.fileURL == url}) {
+        if let existing = docs.first(where: { $0.fileURL == url }) {
             return existing.id
         }
-        var doc = Document(text: contents, fileURL: url, isDirty: false)
-        docs.append(doc)
-        return doc.id
+        docs.append(Document(text: contents, fileURL: url, isDirty: false))
+        return docs.last!.id
     }
     
     func update(_ id: Document.ID, mutate: (inout Document) -> Void) {
-        guard let idx = docs.firstIndex(where: {$0.id == id}) else {return}
+        guard let idx = docs.firstIndex(where: {$0.id == id}) else { return }
         mutate(&docs[idx])
     }
     
     func close(_ id: Document.ID) {
-        docs.removeAll {$0.id == id}
+        docs.removeAll { $0.id == id }
     }
     
+    func binding(for id: Document.ID -> Binding<Document>? {
+        guard let idx = docs.firstIndex(where: { $0.id == id }) else { return nil }
+        return Binding(
+            get: { self.docs[idx] },
+            set: { self.docs[idx] = $0 }
+        )
+    }
+    
+    var firstDocBinding: Binding<Document>? {
+        guard !docs.isEmpty else { return nil }
+        return Binding(
+            get: { self.docs[0] },
+            set: { self.docs[0] = $0 }
+        )
+    }
 }
 
 
