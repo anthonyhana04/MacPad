@@ -31,7 +31,7 @@ final class DocumentStore: ObservableObject {
         docs.removeAll { $0.id == id }
     }
     
-    func binding(for id: Document.ID -> Binding<Document>? {
+    func binding(for id: Document.ID) -> Binding<Document>? {
         guard let idx = docs.firstIndex(where: { $0.id == id }) else { return nil }
         return Binding(
             get: { self.docs[idx] },
