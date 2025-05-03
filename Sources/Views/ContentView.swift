@@ -1,30 +1,32 @@
-// ContentView.swift
+// Sources/Views/ContentView.swift
 import SwiftUI
 import AppKit
 
 struct ContentView: View {
-    @Binding var text: String
-    @Binding var fileName: String
+    @Binding var doc: Document
     @EnvironmentObject private var theme: ThemeManager
 
-    @State private var isEditingName = false
     @FocusState private var nameFieldFocused: Bool
+    @State private var isEditingName = false
 
     private var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }
+
+    private var fileName: String { doc.displayName }
 
     var body: some View {
         VStack(spacing: 0) {
             toolbar
             Divider()
             ZStack(alignment: .topLeading) {
-                TextEditor(text: $text)
+                TextEditor(text: $doc.text)
                     .font(.system(.body, design: .monospaced))
                     .background(Color.clear)
                     .scrollContentBackground(.hidden)
+                    .onChange(of: doc.text) { _ in doc.isDirty = true }
 
-                if text.isEmpty {
+                if doc.text.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("|> Type here!")
                         Text("|> MacPad Ver. \(version)")
@@ -43,23 +45,12 @@ struct ContentView: View {
 
     private var toolbar: some View {
         HStack {
-            Button { newFile() } label: { Label("New", systemImage: "doc") }
+            Button { newFile() }  label: { Label("New", systemImage: "doc") }
             Button { openFile() } label: { Label("Open", systemImage: "folder") }
-            Button { saveAs() } label: { Label("Save As", systemImage: "square.and.arrow.down") }
+            Button { saveAs() }   label: { Label("Save As", systemImage: "square.and.arrow.down") }
             Spacer()
-            Group {
-                if isEditingName {
-                    TextField("", text: $fileName, onCommit: { isEditingName = false })
-                        .textFieldStyle(.plain)
-                        .frame(maxWidth: 200)
-                        .focused($nameFieldFocused)
-                        .onAppear { nameFieldFocused = true }
-                } else {
-                    Text(fileName)
-                        .foregroundStyle(.secondary)
-                        .onTapGesture { isEditingName = true }
-                }
-            }
+            Text(fileName)
+                .foregroundStyle(.secondary)
             Button { theme.toggleTheme() } label: {
                 Image(systemName: theme.colorScheme == .dark ? "sun.max.fill" : "moon.fill")
                     .imageScale(.large)
@@ -74,22 +65,20 @@ struct ContentView: View {
     private func newFile() {
         guard let win = NSApp.keyWindow else { return }
         Task {
-            guard let (newText, newName) = await FileService.shared.newFile(in: win) else {
-                return
-            }
-            text = newText
-            fileName = newName
+            guard let (newText, _) = await FileService.shared.newFile(in: win) else { return }
+            doc.text    = newText
+            doc.fileURL = nil
+            doc.isDirty = false
         }
     }
 
     private func openFile() {
         guard let win = NSApp.keyWindow else { return }
         Task {
-            guard let (openedText, openedName) = await FileService.shared.openFile(in: win) else {
-                return
-            }
-            text = openedText
-            fileName = openedName
+            guard let (openedText, openedName) = await FileService.shared.openFile(in: win) else { return }
+            doc.text    = openedText
+            doc.fileURL = URL(fileURLWithPath: openedName)
+            doc.isDirty = false
         }
     }
 
@@ -98,17 +87,19 @@ struct ContentView: View {
         Task {
             if let url = await FileService.shared.saveAs(
                 in: win,
-                initialText: text,
+                initialText: doc.text,
                 suggestedName: fileName
             ) {
-                fileName = url.lastPathComponent
+                doc.fileURL = url
+                doc.isDirty = false
             }
         }
     }
 }
 
 #Preview {
-    ContentView(text: .constant(""), fileName: .constant("Untitled"))
+    // Preview with a dummy document
+    ContentView(doc: .constant(Document()))
         .environmentObject(ThemeManager())
 }
 
