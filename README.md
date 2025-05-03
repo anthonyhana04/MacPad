@@ -27,7 +27,7 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 
 - **New** (`Cmd+N`): Create a new file.
 - **Open** (`Cmd+O`): Open an existing file.
-- **Save As** (`Cmd+Shift+S`): Save current document under a new name or location.
+- **Save As** (`Cmd+S or Shift+S`): Save current document under a new name or location.
 - **Toggle Theme**: Click the sun/moon icon in the toolbar.
 
 ## Building from Source
