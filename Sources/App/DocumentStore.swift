@@ -3,7 +3,7 @@
 import SwiftUI
 
 @MainActor
-final class DocuemntStore: ObservableObject {
+final class DocumentStore: ObservableObject {
     @Published private(set) var docs: [Document] = []
     
     @discardableResult
