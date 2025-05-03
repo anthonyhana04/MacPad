@@ -5,22 +5,19 @@ import AppKit
 @main
 struct MacPadApp: App {
     @StateObject private var theme = ThemeManager()
-    @StateObject private var store = DocumentStore()
-
+    @StateObject private var store: DocumentStore
+    
     init() {
-        _store = StateObject(wrappedValue: DocumentStore())
-        _ = store.newUntitled()
+        let s = DocumentStore()
+        s.newUntitled()          // first blank doc (not created before)
+        _store = StateObject(wrappedValue: s)
     }
 
     var body: some Scene {
         WindowGroup {
-            if let docBinding = store.firstDocBinding {
-                ContentView(doc: docBinding)
-                    .environmentObject(theme)
-                    .preferredColorScheme(theme.colorScheme)
-            } else {
-                Text("No document open")
-            }
+            ContentView(doc: store.firstDocBinding!)
+                .environmentObject(theme)
+                .preferredColorScheme(theme.colorScheme)
         }
         .environmentObject(store)
     }
