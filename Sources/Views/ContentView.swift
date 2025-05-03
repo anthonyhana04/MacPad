@@ -1,4 +1,5 @@
 // Sources/Views/ContentView.swift
+
 import SwiftUI
 import AppKit
 
@@ -6,14 +7,12 @@ struct ContentView: View {
     @Binding var doc: Document
     @EnvironmentObject private var theme: ThemeManager
 
-    @FocusState private var nameFieldFocused: Bool
     @State private var isEditingName = false
+    @FocusState private var nameFieldFocused: Bool
 
     private var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }
-
-    private var fileName: String { doc.displayName }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -22,9 +21,10 @@ struct ContentView: View {
             ZStack(alignment: .topLeading) {
                 TextEditor(text: $doc.text)
                     .font(.system(.body, design: .monospaced))
-                    .background(Color.clear)
                     .scrollContentBackground(.hidden)
-                    .onChange(of: doc.text) { _ in doc.isDirty = true }
+                    .onChange(of: doc.text) { _, _ in
+                        doc.isDirty = true
+                    }
 
                 if doc.text.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
@@ -49,8 +49,19 @@ struct ContentView: View {
             Button { openFile() } label: { Label("Open", systemImage: "folder") }
             Button { saveAs() }   label: { Label("Save As", systemImage: "square.and.arrow.down") }
             Spacer()
-            Text(fileName)
-                .foregroundStyle(.secondary)
+            Group {
+                if isEditingName {
+                    TextField("", text: $doc.workingName, onCommit: { isEditingName = false })
+                        .textFieldStyle(.plain)
+                        .frame(maxWidth: 200)
+                        .focused($nameFieldFocused)
+                        .onAppear { nameFieldFocused = true }
+                } else {
+                    Text(doc.displayName)
+                        .foregroundStyle(.secondary)
+                        .onTapGesture { isEditingName = true }
+                }
+            }
             Button { theme.toggleTheme() } label: {
                 Image(systemName: theme.colorScheme == .dark ? "sun.max.fill" : "moon.fill")
                     .imageScale(.large)
@@ -62,12 +73,14 @@ struct ContentView: View {
         .background(.background)
     }
 
+    // MARK: – File helpers (single‑doc version)
     private func newFile() {
         guard let win = NSApp.keyWindow else { return }
         Task {
             guard let (newText, _) = await FileService.shared.newFile(in: win) else { return }
-            doc.text    = newText
+            doc.text = newText
             doc.fileURL = nil
+            doc.workingName = "Untitled"
             doc.isDirty = false
         }
     }
@@ -76,8 +89,9 @@ struct ContentView: View {
         guard let win = NSApp.keyWindow else { return }
         Task {
             guard let (openedText, openedName) = await FileService.shared.openFile(in: win) else { return }
-            doc.text    = openedText
-            doc.fileURL = URL(fileURLWithPath: openedName)
+            doc.text = openedText
+            doc.fileURL = nil
+            doc.workingName = openedName
             doc.isDirty = false
         }
     }
@@ -88,9 +102,10 @@ struct ContentView: View {
             if let url = await FileService.shared.saveAs(
                 in: win,
                 initialText: doc.text,
-                suggestedName: fileName
+                suggestedName: doc.workingName
             ) {
                 doc.fileURL = url
+                doc.workingName = url.lastPathComponent
                 doc.isDirty = false
             }
         }
@@ -98,7 +113,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    // Preview with a dummy document
     ContentView(doc: .constant(Document()))
         .environmentObject(ThemeManager())
 }
