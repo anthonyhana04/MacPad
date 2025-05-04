@@ -1,51 +1,51 @@
 // Sources/App/DocumentStore.swift
-
 import SwiftUI
 
 @MainActor
 final class DocumentStore: ObservableObject {
     @Published private(set) var docs: [Document] = []
-    
+
     @discardableResult
     func newUntitled() -> Document.ID {
-        let doc = Document()
+        let prefix = "Untitled - "
+        let next   = (docs.compactMap { Int($0.workingName.replacingOccurrences(of: prefix, with: "")) }.max() ?? 0) + 1
+        let doc    = Document(workingName: "\(prefix)\(next)")
         docs.append(doc)
         return doc.id
     }
-    
+
     @discardableResult
     func open(url: URL, contents: String) -> Document.ID {
-        if let existing = docs.first(where: { $0.fileURL == url }) {
-            return existing.id
-        }
-        docs.append(Document(text: contents, fileURL: url, isDirty: false))
+        if let existing = docs.first(where: { $0.fileURL == url }) { return existing.id }
+        docs.append(
+            Document(text: contents,
+                     fileURL: url,
+                     isDirty: false,
+                     workingName: url.lastPathComponent)
+        )
         return docs.last!.id
     }
-    
-    func update(_ id: Document.ID, mutate: (inout Document) -> Void) {
-        guard let idx = docs.firstIndex(where: {$0.id == id}) else { return }
-        mutate(&docs[idx])
-    }
-    
-    func close(_ id: Document.ID) {
-        docs.removeAll { $0.id == id }
-    }
+
+    func close(_ id: Document.ID) { docs.removeAll { $0.id == id } }
     
     func binding(for id: Document.ID) -> Binding<Document>? {
-        guard let idx = docs.firstIndex(where: { $0.id == id }) else { return nil }
-        return Binding(
-            get: { self.docs[idx] },
-            set: { self.docs[idx] = $0 }
+        Binding(
+            get: { self.docs.first { $0.id == id } ?? Document() },
+            set: { newVal in
+                guard let idx = self.docs.firstIndex(where: { $0.id == id }) else { return }
+                var updated = newVal
+                if updated.text != self.docs[idx].text { updated.isDirty = true }
+                self.docs[idx] = updated
+            }
         )
     }
-    
-    var firstDocBinding: Binding<Document>? {
-        guard !docs.isEmpty else { return nil }
-        return Binding(
-            get: { self.docs[0] },
-            set: { self.docs[0] = $0 }
-        )
-    }
+
+    var firstDocBinding: Binding<Document>? { docs.first.flatMap { binding(for: $0.id) } }
 }
 
+extension DocumentStore {
+    func discardUnsaved() {
+        docs.removeAll(where: \.hasUnsavedChanges)
+    }
+}
 
