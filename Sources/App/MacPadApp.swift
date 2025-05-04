@@ -6,56 +6,91 @@ import AppKit
 struct MacPadApp: App {
     @StateObject private var theme = ThemeManager()
     @StateObject private var store: DocumentStore
-
-    @NSApplicationDelegateAdaptor(AppDelegate.self)
-    private var appDelegate
+    private let windowCoordinator: WindowCoordinator
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     init() {
         let s = DocumentStore()
-        s.newUntitled()
+        _ = s.newUntitled()
         _store = StateObject(wrappedValue: s)
+        windowCoordinator = WindowCoordinator(store: s)
+        appDelegate.store = s
     }
 
     var body: some Scene {
         WindowGroup {
-            let docBinding = store.firstDocBinding!
-
-            ContentView(doc: docBinding)
-                .environmentObject(theme)
-                .preferredColorScheme(theme.colorScheme)
-
-                .onAppear {
-                    appDelegate.shouldPromptIfDirty = {
-                        docBinding.wrappedValue.isDirty
-                    }
-                    appDelegate.performSave = {
-                        saveAs(docBinding)
-                    }
-                }
-                .background(
-                    WindowAccessor { window in
-                        window.delegate = appDelegate
-                    }
-                )
+            docWindow(ensureDocBinding())
         }
         .environmentObject(store)
+        .commands { fileMenu }
     }
 
-    private func saveAs(_ docBinding: Binding<Document>) {
+    private func ensureDocBinding() -> Binding<Document> {
+        if let existing = store.firstDocBinding {
+            return existing
+        }
+        DispatchQueue.main.async {
+            _ = store.newUntitled()
+        }
+        return .constant(Document())
+    }
+
+    @ViewBuilder
+    private func docWindow(_ doc: Binding<Document>) -> some View {
+        EditorTabsView(initialDoc: doc.wrappedValue.id)
+            .environmentObject(theme)
+            .environmentObject(store)
+            .preferredColorScheme(theme.colorScheme)
+            .background(WindowAccessor { $0.delegate = windowCoordinator })
+            .onReceive(NotificationCenter.default.publisher(for: .saveAsRequested)) { note in
+                guard let id = note.object as? Document.ID,
+                      let target = store.binding(for: id) else { return }
+                let closeAfter = (note.userInfo?["closeAfter"] as? Bool) ?? false
+                saveAs(target) { didSave in
+                    if closeAfter && didSave {
+                        DispatchQueue.main.async {
+                            store.close(id)
+                        }
+                    }
+                }
+            }
+            .onAppear {
+                appDelegate.createUntitledDoc = { _ = store.newUntitled() }
+            }
+    }
+
+    private var fileMenu: some Commands {
+        CommandGroup(after: .newItem) {
+            Button("New Tab") {
+                store.newUntitled()
+            }.keyboardShortcut("t")
+            Button("Open…") {
+                Task { await openDoc() }
+            }.keyboardShortcut("o")
+        }
+    }
+
+    private func openDoc() async {
+        guard let win = NSApp.keyWindow else { return }
+        if let (txt, name) = await FileService.shared.openFile(in: win) {
+            _ = store.open(url: URL(fileURLWithPath: name), contents: txt)
+        }
+    }
+
+    private func saveAs(_ doc: Binding<Document>, done: @escaping (Bool) -> Void = { _ in }) {
         Task { @MainActor in
-            guard let win = NSApp.keyWindow else { return }
-
+            guard let win = NSApp.keyWindow else { done(false); return }
             if let url = await FileService.shared.saveAs(
-                    in: win,
-                    initialText: docBinding.wrappedValue.text,
-                    suggestedName: docBinding.wrappedValue.workingName
-               ) {
-                docBinding.wrappedValue.fileURL     = url
-                docBinding.wrappedValue.workingName = url.lastPathComponent
-                docBinding.wrappedValue.isDirty     = false
-
-                appDelegate.skipNextTerminationPrompt = true
-                NSApp.terminate(nil)                
+                in: win,
+                initialText: doc.wrappedValue.text,
+                suggestedName: doc.wrappedValue.workingName
+            ) {
+                doc.wrappedValue.fileURL = url
+                doc.wrappedValue.workingName = url.lastPathComponent
+                doc.wrappedValue.isDirty = false
+                done(true)
+            } else {
+                done(false)
             }
         }
     }
