@@ -1,5 +1,4 @@
 // Sources/Services/FileService.swift
-
 import AppKit
 import UniformTypeIdentifiers
 
@@ -8,7 +7,6 @@ final class FileService {
     static let shared = FileService()
     private init() {}
 
-    /// Create a brand-new file; return nil if the user cancels.
     func newFile(in window: NSWindow) async -> (text: String, name: String)? {
         guard let url = await saveAs(
             in: window,
@@ -20,7 +18,6 @@ final class FileService {
         return ("", url.lastPathComponent)
     }
 
-    /// Open an existing document; return nil if the user cancels.
     func openFile(in window: NSWindow) async -> (text: String, name: String)? {
         await withCheckedContinuation { cont in
             let panel = NSOpenPanel()
@@ -47,7 +44,6 @@ final class FileService {
         }
     }
 
-    /// “Save As” sheet: show a Save panel, write the text out, return URL or nil if canceled.
     func saveAs(
         in window: NSWindow,
         initialText: String,
@@ -55,9 +51,9 @@ final class FileService {
     ) async -> URL? {
         await withCheckedContinuation { cont in
             let panel = NSSavePanel()
-            panel.allowedContentTypes      = [UTType.plainText, UTType.rtf]
-            panel.allowsOtherFileTypes     = true
-            panel.nameFieldStringValue     = suggestedName
+            panel.allowedContentTypes = [UTType.plainText, UTType.rtf]
+            panel.allowsOtherFileTypes = true
+            panel.nameFieldStringValue = suggestedName
             panel.canSelectHiddenExtension = true
 
             panel.beginSheetModal(for: window) { resp in
