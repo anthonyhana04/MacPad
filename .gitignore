@@ -8,6 +8,7 @@ DerivedData/
 Build/
 build/
 **/build/
+MacPad.xcodeproj/
 
 # Xcode 14+ result bundles (when you run tests)
 *.xcresult
