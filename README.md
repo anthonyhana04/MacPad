@@ -15,6 +15,7 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 - **Monospaced Text Editor**: Clean editing experience with monospaced font and smooth scrolling.
 - **Light & Dark Mode**: Toggle instantly and retain preference across launches.
 - **Smart Placeholder UI**: Shows a prompt and version info when empty, disappears on typing.
+- **Multi-Tab Work**: Allows clean editing of multiple files in a singular window utilizing tabs.
 
 ## Installation
 
