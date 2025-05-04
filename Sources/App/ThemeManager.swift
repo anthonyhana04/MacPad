@@ -1,5 +1,4 @@
 // Sources/App/ThemeManager.swift
-
 import SwiftUI
 import AppKit
 
