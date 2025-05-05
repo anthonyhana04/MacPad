@@ -37,5 +37,6 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
 extension Notification.Name {
     static let saveAsRequested = Notification.Name("MacPadSaveAsRequested")
+    static let saveRequested = Notification.Name("MacPadSaveRequested")
 }
 
