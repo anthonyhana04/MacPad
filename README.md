@@ -1,6 +1,6 @@
 # MacPad
 
-A lightweight, native macOS notepad app built with SwiftUI and AppKit.
+MacPad is a feather‑light, all‑native notepad designed exclusively for macOS. Built with SwiftUI for a seamless modern interface and AppKit under the hood for rock‑solid integration, MacPad delivers a refreshingly simple yet powerful writing experience.
 
 ## Table of Contents
 - [Features](#features)
@@ -15,6 +15,7 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 - **Monospaced Text Editor**: Clean editing experience with monospaced font and smooth scrolling.
 - **Light & Dark Mode**: Toggle instantly and retain preference across launches.
 - **Smart Placeholder UI**: Shows a prompt and version info when empty, disappears on typing.
+- **Multi-File Editing**: Allows clean editing of multiple files in a singular window utilizing tabs.
 
 ## Installation
 
@@ -28,6 +29,7 @@ A lightweight, native macOS notepad app built with SwiftUI and AppKit.
 - **New** (`Cmd+N`): Create a new file.
 - **Open** (`Cmd+O`): Open an existing file.
 - **Save As** (`Cmd+S or Shift+S`): Save current document under a new name or location.
+- **New Tab** (`Cmd+T`): Create a new file and open it as a new tab in the window. 
 - **Toggle Theme**: Click the sun/moon icon in the toolbar.
 
 ## Building from Source
