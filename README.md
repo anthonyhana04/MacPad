@@ -1,6 +1,6 @@
 # MacPad
 
-A lightweight, native macOS notepad app built with SwiftUI and AppKit.
+MacPad is a feather‑light, all‑native notepad designed exclusively for macOS. Built with SwiftUI for a seamless modern interface and AppKit under the hood for rock‑solid integration, MacPad delivers a refreshingly simple yet powerful writing experience.
 
 ## Table of Contents
 - [Features](#features)
