@@ -41,7 +41,7 @@ struct ContentView: View {
         HStack {
             Button { newFile() } label: { Label("New", systemImage: "doc") }
             Button { openFile() } label: { Label("Open", systemImage: "folder") }
-            Button { saveAs() } label: { Label("Save", systemImage: "square.and.arrow.down") }
+            Button { save() } label: { Label("Save", systemImage: "square.and.arrow.down") }
             Spacer()
             filenameField
             Button {
@@ -92,11 +92,25 @@ struct ContentView: View {
     private func openFile() {
         guard let win = NSApp.keyWindow else { return }
         Task {
-            guard let (text, name) = await FileService.shared.openFile(in: win) else { return }
+            guard let (text, name, url) = await FileService.shared.openFile(in: win) else { return }
             doc.text = text
-            doc.fileURL = nil
+            doc.fileURL = url
             doc.workingName = name
             doc.isDirty = false
+        }
+    }
+    
+    private func save() {
+        if let url = doc.fileURL {
+            do {
+                try doc.text.write(to: url, atomically: true, encoding: .utf8)
+                doc.isDirty = false
+            } catch {
+                let alert = NSAlert(error: error)
+                alert.runModal()
+            }
+        } else {
+            saveAs()
         }
     }
 
