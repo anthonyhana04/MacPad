@@ -66,9 +66,17 @@ struct ContentView: View {
                     .onAppear { nameFieldFocused = true }
             } else {
                 Button { isEditingName = true } label: {
-                    Text(doc.workingName)
-                        .font(.system(.body, design: .monospaced))
-                        .foregroundStyle(theme.colorScheme == .dark ? .white : .black)
+                    HStack(spacing: 4) {
+                        Text(doc.workingName)
+                            .font(.system(.body, design: .monospaced))
+                            .foregroundStyle(theme.colorScheme == .dark ? .white : .black)
+                        if doc.hasUnsavedChanges {
+                            Circle()
+                                .fill(Color.red)
+                                .frame(width: 8, height: 8)
+                                .help("Unsaved changes")
+                        }
+                    }
                 }
             }
         }
