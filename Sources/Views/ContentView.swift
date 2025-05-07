@@ -58,7 +58,13 @@ struct ContentView: View {
 
     private var filenameField: some View {
         Group {
-            if isEditingName {
+            if doc.fileURL != nil {
+                HStack(spacing: 4) {
+                    Text(doc.workingName)
+                        .font(.system(.body, design: .monospaced))
+                }
+                .foregroundColor(.secondary)
+            } else if isEditingName {
                 TextField("", text: $doc.workingName, onCommit: { isEditingName = false })
                     .textFieldStyle(.roundedBorder)
                     .font(.system(.body, design: .monospaced))
