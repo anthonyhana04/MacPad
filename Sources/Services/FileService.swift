@@ -18,7 +18,7 @@ final class FileService {
         return ("", url.lastPathComponent)
     }
 
-    func openFile(in window: NSWindow) async -> (text: String, name: String)? {
+    func openFile(in window: NSWindow) async -> (text: String, name: String, url: URL)? {
         await withCheckedContinuation { cont in
             let panel = NSOpenPanel()
             panel.allowedContentTypes  = [UTType.plainText, UTType.rtf]
@@ -35,10 +35,18 @@ final class FileService {
                        options: [:],
                        documentAttributes: nil
                    ) {
-                    cont.resume(returning: (attr.string, url.lastPathComponent))
+                    cont.resume(returning: (
+                        text: attr.string,
+                        name: url.lastPathComponent,
+                        url: url
+                    ))
                 } else {
                     let txt = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
-                    cont.resume(returning: (txt, url.lastPathComponent))
+                    cont.resume(returning: (
+                        text: txt,
+                        name: url.lastPathComponent,
+                        url: url
+                    ))
                 }
             }
         }
