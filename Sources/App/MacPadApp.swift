@@ -118,8 +118,8 @@ struct MacPadApp: App {
     
     private func openDoc() async {
         guard let win = NSApp.keyWindow else { return }
-        if let (txt, name) = await FileService.shared.openFile(in: win) {
-            _ = store.open(url: URL(fileURLWithPath: name), contents: txt)
+        if let (txt, _, url) = await FileService.shared.openFile(in: win) {
+            _ = store.open(url: url, contents: txt)
         }
     }
     
