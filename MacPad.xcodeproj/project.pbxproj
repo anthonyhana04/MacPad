@@ -38,7 +38,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6E2EA0082DBEE37A00A9708A /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
 		6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MacPad.xcodeproj; sourceTree = "<group>"; };
 		6E2EA0102DBEE37A00A9708A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6E2EA0142DBEE37A00A9708A /* MacPadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacPadApp.swift; sourceTree = "<group>"; };
@@ -51,6 +50,7 @@
 		6E5911A02DC5B61800BC5DA7 /* DocumentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentStore.swift; sourceTree = "<group>"; };
 		6E5911A32DC6DDF000BC5DA7 /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		6E5911AC2DC6EE0C00BC5DA7 /* EditorTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTabsView.swift; sourceTree = "<group>"; };
+		6E6989942DCBD3C6000EC974 /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
 		6E99238F2DBEDE260022C097 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E99239D2DBEDE280022C097 /* MacPadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E9923A72DBEDE280022C097 /* MacPadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,14 +81,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6E2EA0092DBEE37A00A9708A /* MacPad */ = {
-			isa = PBXGroup;
-			children = (
-				6E2EA0082DBEE37A00A9708A /* MacPad.entitlements */,
-			);
-			path = MacPad;
-			sourceTree = "<group>";
-		};
 		6E2EA0122DBEE37A00A9708A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -143,14 +135,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6E6989952DCBD3C6000EC974 /* Entitlements */ = {
+			isa = PBXGroup;
+			children = (
+				6E6989942DCBD3C6000EC974 /* MacPad.entitlements */,
+			);
+			path = Entitlements;
+			sourceTree = "<group>";
+		};
 		6E9923862DBEDE260022C097 = {
 			isa = PBXGroup;
 			children = (
-				6E2EA0092DBEE37A00A9708A /* MacPad */,
 				6E2EA00A2DBEE37A00A9708A /* MacPad.xcodeproj */,
 				6E2EA0122DBEE37A00A9708A /* Resources */,
 				6E2EA01B2DBEE37A00A9708A /* Sources */,
 				6E9923902DBEDE260022C097 /* Products */,
+				6E6989952DCBD3C6000EC974 /* Entitlements */,
 			);
 			sourceTree = "<group>";
 		};
@@ -474,7 +474,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MacPad/MacPad.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlements/MacPad.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -503,7 +503,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MacPad/MacPad.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlements/MacPad.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
