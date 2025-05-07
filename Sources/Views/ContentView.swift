@@ -62,6 +62,12 @@ struct ContentView: View {
                 HStack(spacing: 4) {
                     Text(doc.workingName)
                         .font(.system(.body, design: .monospaced))
+                    if doc.hasUnsavedChanges {
+                        Circle()
+                            .frame(width: 8, height: 8)
+                            .foregroundStyle(.red)
+                            .help("Unsaved changes")
+                    }
                 }
                 .foregroundColor(.secondary)
             } else if isEditingName {
@@ -78,7 +84,7 @@ struct ContentView: View {
                             .foregroundStyle(theme.colorScheme == .dark ? .white : .black)
                         if doc.hasUnsavedChanges {
                             Circle()
-                                .fill(Color.red)
+                                .foregroundStyle(.red)
                                 .frame(width: 8, height: 8)
                                 .help("Unsaved changes")
                         }
