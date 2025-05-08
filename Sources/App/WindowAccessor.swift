@@ -1,9 +1,7 @@
 // Sources/App/WindowAccessor.swift
-
 import SwiftUI
 import AppKit
 
-/// A tiny view that grabs its NSWindow and runs a callback.
 struct WindowAccessor: NSViewRepresentable {
     var callback: (NSWindow) -> Void
 
