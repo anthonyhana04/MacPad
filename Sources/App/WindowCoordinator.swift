@@ -20,10 +20,33 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
 
         switch alert.runModal() {
         case .alertFirstButtonReturn:
-            store.docs
-                .filter(\.hasUnsavedChanges)
-                .forEach { NotificationCenter.default.post(name: .saveAsRequested,
-                                                           object: $0.id) }
+            let docsWithChanges = store.docs.filter(\.hasUnsavedChanges)
+            var savedCount = 0
+            
+            for doc in docsWithChanges {
+                if let fileURL = doc.fileURL {
+                    NotificationCenter.default.post(
+                        name: .saveRequested,
+                        object: doc.id
+                    )
+                    savedCount += 1
+                    if savedCount == docsWithChanges.count {
+                        DispatchQueue.main.async {
+                            NSApp.terminate(nil)
+                        }
+                    }
+                } else {
+                    NotificationCenter.default.post(
+                        name: .saveAsRequested,
+                        object: doc.id,
+                        userInfo: ["shouldExit": true]
+                    )
+                }
+            }
+            if docsWithChanges.isEmpty {
+                NSApp.terminate(nil)
+            }
+            
             return false
         case .alertSecondButtonReturn:
             store.discardUnsaved()
@@ -39,4 +62,3 @@ extension Notification.Name {
     static let saveAsRequested = Notification.Name("MacPadSaveAsRequested")
     static let saveRequested = Notification.Name("MacPadSaveRequested")
 }
-

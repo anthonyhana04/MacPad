@@ -46,10 +46,17 @@ struct MacPadApp: App {
                 guard let id = note.object as? Document.ID,
                       let target = store.binding(for: id) else { return }
                 let closeAfter = (note.userInfo?["closeAfter"] as? Bool) ?? false
+                let shouldExit = (note.userInfo?["shouldExit"] as? Bool) ?? false
                 saveAs(target) { didSave in
                     if closeAfter && didSave {
                         DispatchQueue.main.async {
                             store.close(id)
+                        }
+                    }
+                    
+                    if shouldExit && didSave {
+                        DispatchQueue.main.async {
+                            NSApp.terminate(nil)
                         }
                     }
                 }
@@ -58,13 +65,25 @@ struct MacPadApp: App {
                 guard let id = note.object as? Document.ID,
                       let binding = store.binding(for: id) else { return }
                 let doc = binding.wrappedValue
+                let shouldExit = (note.userInfo?["shouldExit"] as? Bool) ?? false
+                
                 if let url = doc.fileURL {
                     Task { @MainActor in
                         try? doc.text.write(to: url, atomically: true, encoding: .utf8)
                         binding.wrappedValue.isDirty = false
+                        
+                        if shouldExit {
+                            NSApp.terminate(nil)
+                        }
                     }
                 } else {
-                    saveAs(binding)
+                    saveAs(binding) { didSave in
+                        if shouldExit && didSave {
+                            DispatchQueue.main.async {
+                                NSApp.terminate(nil)
+                            }
+                        }
+                    }
                 }
             }
         
@@ -141,5 +160,3 @@ struct MacPadApp: App {
         }
     }
 }
-
-
