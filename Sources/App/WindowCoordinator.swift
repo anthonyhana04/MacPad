@@ -24,7 +24,7 @@ final class WindowCoordinator: NSObject, NSWindowDelegate {
             var savedCount = 0
             
             for doc in docsWithChanges {
-                if let fileURL = doc.fileURL {
+                if doc.fileURL != nil {
                     NotificationCenter.default.post(
                         name: .saveRequested,
                         object: doc.id
