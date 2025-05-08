@@ -14,8 +14,8 @@ struct EncodingOption: Identifiable, Hashable {
         EncodingOption(name: "ISO Latin 1", encoding: .isoLatin1),
         EncodingOption(name: "Japanese (EUC)", encoding: .japaneseEUC),
         EncodingOption(name: "Japanese (Shift JIS)", encoding: .shiftJIS),
-        EncodingOption(name: "Chinese Simplified", encoding: .init(rawValue: 0x80000632)), // macChineseSimp
-        EncodingOption(name: "Chinese Traditional", encoding: .init(rawValue: 0x80000A03)), // macChineseTrad
+        EncodingOption(name: "Chinese Simplified", encoding: .init(rawValue: 0x80000632)),
+        EncodingOption(name: "Chinese Traditional", encoding: .init(rawValue: 0x80000A03)),
         EncodingOption(name: "Central/East European", encoding: .windowsCP1250),
         EncodingOption(name: "Cyrillic", encoding: .windowsCP1251),
         EncodingOption(name: "CP-1252 (Single Byte)", encoding: .windowsCP1252)
