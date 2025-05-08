@@ -32,7 +32,6 @@ struct EncodingSelector: View {
                     .padding(.vertical, 8)
                 
                 Divider()
-                
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(encodingManager.availableEncodings) { option in
