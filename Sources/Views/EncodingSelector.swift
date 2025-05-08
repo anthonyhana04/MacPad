@@ -11,6 +11,7 @@ struct EncodingSelector: View {
                 Text(encodingManager.currentEncoding.name)
                     .font(.system(size: 12))
                     .lineLimit(1)
+                    .frame(minWidth: 60, alignment: .leading)
                 Image(systemName: "chevron.up.chevron.down")
                     .imageScale(.small)
                     .font(.system(size: 10))
@@ -22,7 +23,7 @@ struct EncodingSelector: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .fixedSize(horizontal: false, vertical: true)
+        .fixedSize()
         .popover(isPresented: $showingPicker, arrowEdge: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Select Encoding")
