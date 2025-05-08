@@ -77,10 +77,11 @@ struct ContentView: View {
             Spacer()
             EncodingSelector()
                 .environmentObject(encodingManager)
-                .frame(height: 24)
+                .layoutPriority(2)
         }
-        .frame(height: 24)
+        .frame(height: 24, alignment: .trailing)
         .padding(.horizontal, 4)
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private var filenameField: some View {
