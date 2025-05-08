@@ -21,7 +21,10 @@ struct MacPadApp: App {
     var body: some Scene {
         WindowGroup {
             docWindow(ensureDocBinding())
+                .frame(minWidth: 680, minHeight: 460)
         }
+        .windowStyle(.titleBar)
+        .windowToolbarStyle(.unified)
         .environmentObject(store)
         .commands {
             fileMenu
@@ -46,7 +49,14 @@ struct MacPadApp: App {
             .environmentObject(encodingManager)
             .environmentObject(store)
             .preferredColorScheme(theme.colorScheme)
-            .background(WindowAccessor { $0.delegate = windowCoordinator })
+            .background(WindowAccessor { window in
+                window.delegate = windowCoordinator
+                window.minSize = NSSize(width: 680, height: 460)
+                
+                if let identifier = Bundle.main.bundleIdentifier {
+                    window.setFrameAutosaveName("\(identifier).mainWindow")
+                }
+            })
             .onReceive(NotificationCenter.default.publisher(for: .saveAsRequested)) { note in
                 guard let id = note.object as? Document.ID,
                       let target = store.binding(for: id) else { return }
@@ -167,7 +177,6 @@ struct MacPadApp: App {
         if let (txt, _, url, encoding) = await FileService.shared.openFile(in: win, encodingManager: encodingManager) {
             _ = store.open(url: url, contents: txt, encoding: encoding)
             
-            // Update encoding manager to match opened file
             if let option = encodingManager.availableEncodings.first(where: { $0.encoding == encoding }) {
                 encodingManager.setEncoding(option)
             }
