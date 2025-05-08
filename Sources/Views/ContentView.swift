@@ -5,6 +5,7 @@ import AppKit
 struct ContentView: View {
     @Binding var doc: Document
     @EnvironmentObject private var theme: ThemeManager
+    @EnvironmentObject private var encodingManager: EncodingManager
     @State private var isEditingName = false
     @FocusState private var nameFieldFocused: Bool
 
@@ -20,6 +21,9 @@ struct ContentView: View {
                 TextEditor(text: $doc.text)
                     .font(.system(.body, design: .monospaced))
                     .scrollContentBackground(.hidden)
+                    .onChange(of: doc.text) { _, _ in
+                        doc.isDirty = true
+                    }
                 if doc.text.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("|> Type here!")
@@ -33,8 +37,20 @@ struct ContentView: View {
             }
             .padding(8)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            Divider()
+            statusBar
         }
         .frame(minWidth: 600, minHeight: 400)
+        .onChange(of: encodingManager.currentEncoding) { oldValue, newValue in
+            if doc.encoding != newValue.encoding {
+                if !doc.text.isEmpty && doc.fileURL != nil {
+                    promptForEncodingChange(from: oldValue, to: newValue)
+                } else {
+                    doc.encoding = newValue.encoding
+                }
+            }
+        }
     }
 
     private var toolbar: some View {
@@ -54,6 +70,17 @@ struct ContentView: View {
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
+    }
+    
+    private var statusBar: some View {
+        HStack {
+            Spacer()
+            EncodingSelector()
+                .environmentObject(encodingManager)
+                .frame(height: 24)
+        }
+        .frame(height: 24)
+        .padding(.horizontal, 4)
     }
 
     private var filenameField: some View {
@@ -99,23 +126,29 @@ struct ContentView: View {
         doc.fileURL = nil
         doc.workingName = "Untitled"
         doc.isDirty = false
+        doc.encoding = encodingManager.currentEncoding.encoding
     }
 
     private func openFile() {
         guard let win = NSApp.keyWindow else { return }
         Task {
-            guard let (text, name, url) = await FileService.shared.openFile(in: win) else { return }
+            guard let (text, name, url, encoding) = await FileService.shared.openFile(in: win, encodingManager: encodingManager) else { return }
             doc.text = text
             doc.fileURL = url
             doc.workingName = name
             doc.isDirty = false
+            doc.encoding = encoding
+            
+            if let encodingOption = encodingManager.availableEncodings.first(where: { $0.encoding == encoding }) {
+                encodingManager.setEncoding(encodingOption)
+            }
         }
     }
     
     private func save() {
         if let url = doc.fileURL {
             do {
-                try doc.text.write(to: url, atomically: true, encoding: .utf8)
+                try doc.text.write(to: url, atomically: true, encoding: doc.encoding)
                 doc.isDirty = false
             } catch {
                 let alert = NSAlert(error: error)
@@ -129,12 +162,41 @@ struct ContentView: View {
     private func saveAs() {
         guard let win = NSApp.keyWindow else { return }
         Task {
-            if let url = await FileService.shared.saveAs(in: win, initialText: doc.text, suggestedName: doc.workingName) {
+            if let url = await FileService.shared.saveAs(
+                in: win,
+                initialText: doc.text,
+                suggestedName: doc.workingName,
+                encoding: doc.encoding
+            ) {
                 doc.fileURL = url
                 doc.workingName = url.lastPathComponent
                 doc.isDirty = false
             }
         }
     }
+    
+    private func promptForEncodingChange(from oldValue: EncodingOption, to newValue: EncodingOption) {
+        let alert = NSAlert()
+        alert.messageText = "Change document encoding?"
+        alert.informativeText = "Changing from \(oldValue.name) to \(newValue.name) might cause data loss if the document contains characters not supported by the new encoding."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Change Encoding")
+        alert.addButton(withTitle: "Cancel")
+        
+        if alert.runModal() == .alertFirstButtonReturn {
+            doc.encoding = newValue.encoding
+            
+            if !doc.text.isEmpty && doc.fileURL != nil {
+                if let data = doc.text.data(using: oldValue.encoding),
+                   let reencoded = String(data: data, encoding: newValue.encoding) {
+                    doc.text = reencoded
+                    doc.isDirty = true
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                encodingManager.setEncoding(oldValue)
+            }
+        }
+    }
 }
-
