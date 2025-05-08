@@ -134,21 +134,55 @@ struct MacPadApp: App {
             Divider()
             
             Button("Save") {
-                if let binding = store.firstDocBinding {
+                if let activeWindow = NSApp.keyWindow,
+                   let tabView = activeWindow.contentViewController?.view.subviews.first(where: { $0 is NSTabView }) as? NSTabView,
+                   let selectedTabViewItem = tabView.selectedTabViewItem,
+                   let tabIdentifier = selectedTabViewItem.identifier as? String,
+                   let docID = UUID(uuidString: tabIdentifier) {
+                    
                     NotificationCenter.default.post(
                         name: .saveRequested,
-                        object: binding.wrappedValue.id
+                        object: docID
                     )
+                } else {
+                    if let activeDoc = store.activeDocBinding?.wrappedValue {
+                        NotificationCenter.default.post(
+                            name: .saveRequested,
+                            object: activeDoc.id
+                        )
+                    } else if let firstDoc = store.firstDocBinding?.wrappedValue {
+                        NotificationCenter.default.post(
+                            name: .saveRequested,
+                            object: firstDoc.id
+                        )
+                    }
                 }
             }
             .keyboardShortcut("s", modifiers: [.command])
             
             Button("Save As…") {
-                if let binding = store.firstDocBinding {
+                if let activeWindow = NSApp.keyWindow,
+                   let tabView = activeWindow.contentViewController?.view.subviews.first(where: { $0 is NSTabView }) as? NSTabView,
+                   let selectedTabViewItem = tabView.selectedTabViewItem,
+                   let tabIdentifier = selectedTabViewItem.identifier as? String,
+                   let docID = UUID(uuidString: tabIdentifier) {
+                    
                     NotificationCenter.default.post(
                         name: .saveAsRequested,
-                        object: binding.wrappedValue.id
+                        object: docID
                     )
+                } else {
+                    if let activeDoc = store.activeDocBinding?.wrappedValue {
+                        NotificationCenter.default.post(
+                            name: .saveAsRequested,
+                            object: activeDoc.id
+                        )
+                    } else if let firstDoc = store.firstDocBinding?.wrappedValue {
+                        NotificationCenter.default.post(
+                            name: .saveAsRequested,
+                            object: firstDoc.id
+                        )
+                    }
                 }
             }
             .keyboardShortcut("S", modifiers: [.command, .shift])
@@ -176,7 +210,7 @@ struct MacPadApp: App {
         guard let win = NSApp.keyWindow else { return }
         if let (txt, _, url, encoding) = await FileService.shared.openFile(in: win, encodingManager: encodingManager) {
             _ = store.open(url: url, contents: txt, encoding: encoding)
-            
+
             if let option = encodingManager.availableEncodings.first(where: { $0.encoding == encoding }) {
                 encodingManager.setEncoding(option)
             }
