@@ -5,6 +5,7 @@ import AppKit
 @main
 struct MacPadApp: App {
     @StateObject private var theme = ThemeManager()
+    @StateObject private var encodingManager = EncodingManager()
     @StateObject private var store: DocumentStore
     private let windowCoordinator: WindowCoordinator
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
@@ -22,7 +23,10 @@ struct MacPadApp: App {
             docWindow(ensureDocBinding())
         }
         .environmentObject(store)
-        .commands { fileMenu }
+        .commands {
+            fileMenu
+            editMenu
+        }
     }
     
     private func ensureDocBinding() -> Binding<Document> {
@@ -39,6 +43,7 @@ struct MacPadApp: App {
     private func docWindow(_ doc: Binding<Document>) -> some View {
         EditorTabsView(initialDoc: doc.wrappedValue.id)
             .environmentObject(theme)
+            .environmentObject(encodingManager)
             .environmentObject(store)
             .preferredColorScheme(theme.colorScheme)
             .background(WindowAccessor { $0.delegate = windowCoordinator })
@@ -69,11 +74,16 @@ struct MacPadApp: App {
                 
                 if let url = doc.fileURL {
                     Task { @MainActor in
-                        try? doc.text.write(to: url, atomically: true, encoding: .utf8)
-                        binding.wrappedValue.isDirty = false
-                        
-                        if shouldExit {
-                            NSApp.terminate(nil)
+                        do {
+                            try doc.text.write(to: url, atomically: true, encoding: doc.encoding)
+                            binding.wrappedValue.isDirty = false
+                            
+                            if shouldExit {
+                                NSApp.terminate(nil)
+                            }
+                        } catch {
+                            let alert = NSAlert(error: error)
+                            alert.runModal()
                         }
                     }
                 } else {
@@ -135,10 +145,32 @@ struct MacPadApp: App {
         }
     }
     
+    private var editMenu: some Commands {
+        CommandMenu("Encoding") {
+            ForEach(encodingManager.availableEncodings) { option in
+                if option.name == "UTF-8" {
+                    Button(option.name) {
+                        encodingManager.setEncoding(option)
+                    }
+                    .keyboardShortcut("e", modifiers: [.command, .option])
+                } else {
+                    Button(option.name) {
+                        encodingManager.setEncoding(option)
+                    }
+                }
+            }
+        }
+    }
+    
     private func openDoc() async {
         guard let win = NSApp.keyWindow else { return }
-        if let (txt, _, url) = await FileService.shared.openFile(in: win) {
-            _ = store.open(url: url, contents: txt)
+        if let (txt, _, url, encoding) = await FileService.shared.openFile(in: win, encodingManager: encodingManager) {
+            _ = store.open(url: url, contents: txt, encoding: encoding)
+            
+            // Update encoding manager to match opened file
+            if let option = encodingManager.availableEncodings.first(where: { $0.encoding == encoding }) {
+                encodingManager.setEncoding(option)
+            }
         }
     }
     
@@ -148,7 +180,8 @@ struct MacPadApp: App {
             if let url = await FileService.shared.saveAs(
                 in: win,
                 initialText: doc.wrappedValue.text,
-                suggestedName: doc.wrappedValue.workingName
+                suggestedName: doc.wrappedValue.workingName,
+                encoding: doc.wrappedValue.encoding
             ) {
                 doc.wrappedValue.fileURL = url
                 doc.wrappedValue.workingName = url.lastPathComponent
