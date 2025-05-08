@@ -15,13 +15,14 @@ final class DocumentStore: ObservableObject {
     }
 
     @discardableResult
-    func open(url: URL, contents: String) -> Document.ID {
+    func open(url: URL, contents: String, encoding: String.Encoding = .utf8) -> Document.ID {
         if let existing = docs.first(where: { $0.fileURL == url }) { return existing.id }
         docs.append(
             Document(text: contents,
                      fileURL: url,
                      isDirty: false,
-                     workingName: url.lastPathComponent)
+                     workingName: url.lastPathComponent,
+                     encoding: encoding)
         )
         return docs.last!.id
     }
@@ -48,4 +49,3 @@ extension DocumentStore {
         docs.removeAll(where: \.hasUnsavedChanges)
     }
 }
-
