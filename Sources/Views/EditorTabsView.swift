@@ -58,7 +58,7 @@ struct EditorTabsView: View {
         guard doc.hasUnsavedChanges else { performClose(doc.id); return }
 
         let alert = NSAlert()
-        alert.messageText = "The document "\(doc.displayName)" has unsaved changes."
+        alert.messageText = "The document \"" + doc.displayName + "\" has unsaved changes."
         alert.informativeText = "Save before closing?"
         alert.alertStyle = .warning
         alert.addButton(withTitle: "Save")
