@@ -22,5 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         return .terminateNow
     }
+    
+    func applicationWillTerminate(_ notification: Notification) {
+        store?.resetUntitledCounterIfEmpty()
+    }
 }
-
