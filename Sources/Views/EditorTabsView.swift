@@ -20,14 +20,19 @@ struct EditorTabsView: View {
                     TabTile(
                         doc: doc,
                         selected: selection == doc.id,
-                        select: { selection = doc.id },
+                        select: {
+                            selection = doc.id
+                            store.setActiveDocument(doc.id)
+                        },
                         close: { self.close(doc) }
                     )
+                    .id(doc.id)
                 }
                 Spacer()
                 Button {
                     let id = store.newUntitled()
                     selection = id
+                    store.setActiveDocument(id)
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -42,6 +47,7 @@ struct EditorTabsView: View {
             if let binding = store.binding(for: selection) {
                 ContentView(doc: binding)
                     .environmentObject(encodingManager)
+                    .id(selection)
             }
         }
         .preferredColorScheme(theme.colorScheme)
@@ -50,6 +56,24 @@ struct EditorTabsView: View {
             if !newDocs.contains(where: { $0.id == selection }),
                let first = newDocs.first {
                 selection = first.id
+                store.setActiveDocument(first.id)
+            }
+        }
+        .onChange(of: selection) { oldValue, newValue in
+            store.setActiveDocument(newValue)
+        }
+        .onAppear {
+            store.setActiveDocument(selection)
+
+            DispatchQueue.main.async {
+                if let window = NSApp.keyWindow,
+                   let tabView = window.contentViewController?.view.subviews.first(where: { $0 is NSTabView }) as? NSTabView {
+                    for (index, doc) in store.docs.enumerated() {
+                        if index < tabView.tabViewItems.count {
+                            tabView.tabViewItems[index].identifier = doc.id.uuidString
+                        }
+                    }
+                }
             }
         }
     }
@@ -83,8 +107,10 @@ struct EditorTabsView: View {
         store.close(id)
         if store.docs.isEmpty {
             selection = store.newUntitled()
+            store.setActiveDocument(selection)
         } else if !store.docs.contains(where: { $0.id == selection }) {
             selection = store.docs.first!.id
+            store.setActiveDocument(selection)
         }
     }
 }
