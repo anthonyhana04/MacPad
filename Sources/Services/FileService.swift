@@ -41,14 +41,12 @@ final class FileService {
                         text: attr.string,
                         name: url.lastPathComponent,
                         url: url,
-                        encoding: .utf8 // RTF is always interpreted as UTF-8
+                        encoding: .utf8
                     ))
                 } else {
-                    // First, try to read the file as binary data to detect encoding
                     do {
                         let data = try Data(contentsOf: url)
-                        
-                        // Try to detect encoding
+
                         if let detectedEncoding = encodingManager.detectEncoding(from: data) {
                             if let text = String(data: data, encoding: detectedEncoding) {
                                 cont.resume(returning: (
@@ -60,8 +58,6 @@ final class FileService {
                                 return
                             }
                         }
-                        
-                        // If detection fails, fall back to UTF-8
                         if let text = String(data: data, encoding: .utf8) {
                             cont.resume(returning: (
                                 text: text,
@@ -70,7 +66,6 @@ final class FileService {
                                 encoding: .utf8
                             ))
                         } else {
-                            // If UTF-8 fails, try with the current encoding from manager
                             let currentEncoding = encodingManager.currentEncoding.encoding
                             if let text = String(data: data, encoding: currentEncoding) {
                                 cont.resume(returning: (
@@ -80,7 +75,6 @@ final class FileService {
                                     encoding: currentEncoding
                                 ))
                             } else {
-                                // Last resort: empty string with UTF-8 encoding
                                 cont.resume(returning: (
                                     text: "",
                                     name: url.lastPathComponent,
@@ -90,7 +84,6 @@ final class FileService {
                             }
                         }
                     } catch {
-                        // If reading fails, return an empty document
                         cont.resume(returning: (
                             text: "",
                             name: url.lastPathComponent,
@@ -131,11 +124,9 @@ final class FileService {
                         try? data.write(to: url)
                     }
                 } else {
-                    // Write using the specified encoding
                     if let data = initialText.data(using: encoding) {
                         try? data.write(to: url)
                     } else {
-                        // Fall back to UTF-8 if encoding fails
                         try? initialText.write(to: url, atomically: true, encoding: .utf8)
                     }
                 }
