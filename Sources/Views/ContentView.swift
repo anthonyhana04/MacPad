@@ -7,6 +7,7 @@ struct ContentView: View {
     @EnvironmentObject private var theme: ThemeManager
     @EnvironmentObject private var encodingManager: EncodingManager
     @State private var isEditingName = false
+    @State private var wordCount: (words: Int, chars: Int, lines: Int) = (0, 0, 0)
     @FocusState private var nameFieldFocused: Bool
 
     private var version: String {
@@ -23,6 +24,7 @@ struct ContentView: View {
                     .scrollContentBackground(.hidden)
                     .onChange(of: doc.text) { _, _ in
                         doc.isDirty = true
+                        updateWordCount()
                     }
                 if doc.text.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
@@ -42,6 +44,9 @@ struct ContentView: View {
             statusBar
         }
         .frame(minWidth: 600, minHeight: 400)
+        .onAppear {
+            updateWordCount()
+        }
         .onChange(of: encodingManager.currentEncoding) { oldValue, newValue in
             if doc.encoding != newValue.encoding {
                 if !doc.text.isEmpty && doc.fileURL != nil {
@@ -73,7 +78,16 @@ struct ContentView: View {
     }
     
     private var statusBar: some View {
-        HStack {
+        let wordText = wordCount.words == 1 ? "word" : "words"
+        let charText = wordCount.chars == 1 ? "character" : "characters"
+        let lineText = wordCount.lines == 1 ? "line" : "lines"
+        
+        return HStack {
+            Text("\(wordCount.words) \(wordText), \(wordCount.chars) \(charText), \(wordCount.lines) \(lineText)")
+                .font(.system(size: 12))
+                .foregroundColor(.secondary)
+                .padding(.leading, 8)
+                .layoutPriority(1)
             Spacer()
             EncodingSelector()
                 .environmentObject(encodingManager)
@@ -122,12 +136,23 @@ struct ContentView: View {
         }
     }
 
+    private func updateWordCount() {
+        let text = doc.text
+        let characterCount = text.count
+        let wordCount = text.components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }.count
+        let lineCount = text.components(separatedBy: .newlines).count
+        
+        self.wordCount = (words: wordCount, chars: characterCount, lines: lineCount)
+    }
+
     private func newFile() {
         doc.text = ""
         doc.fileURL = nil
         doc.workingName = "Untitled"
         doc.isDirty = false
         doc.encoding = encodingManager.currentEncoding.encoding
+        updateWordCount()
     }
 
     private func openFile() {
@@ -143,6 +168,8 @@ struct ContentView: View {
             if let encodingOption = encodingManager.availableEncodings.first(where: { $0.encoding == encoding }) {
                 encodingManager.setEncoding(encodingOption)
             }
+            
+            updateWordCount()
         }
     }
     
