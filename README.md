@@ -16,6 +16,8 @@ MacPad is a feather‑light, all‑native notepad designed exclusively for macOS
 - **Light & Dark Mode**: Toggle instantly and retain preference across launches.
 - **Smart Placeholder UI**: Shows a prompt and version info when empty, disappears on typing.
 - **Multi-File Editing**: Allows clean editing of multiple files in a singular window utilizing tabs.
+- **Multi-Format Encoding**: Comprehensive text encoding support with automatic detection and seamless conversion between 18+
+formats (UTF-8, UTF-16, ASCII, etc.).
 
 ## Installation
 
